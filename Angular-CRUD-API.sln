@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular-CRUD-API", "Angular-CRUD-API\Angular-CRUD-API.csproj", "{B3E98C03-6C19-4092-B1BA-375D8C310182}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3E98C03-6C19-4092-B1BA-375D8C310182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3E98C03-6C19-4092-B1BA-375D8C310182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3E98C03-6C19-4092-B1BA-375D8C310182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3E98C03-6C19-4092-B1BA-375D8C310182}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E9FF1C5-D1BB-4285-A70C-947E2B5A7831}
+	EndGlobalSection
+EndGlobal
