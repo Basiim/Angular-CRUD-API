@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Angular_CRUD_API.Data;
 using Angular_CRUD_API.Model;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using FluentValidation;
 
 namespace Angular_CRUD_API.Controllers
 {
@@ -16,13 +11,14 @@ namespace Angular_CRUD_API.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
+        private readonly IValidator<Employee> _validator;
 
-        public EmployeesController(ApplicationDBContext context)
+        public EmployeesController(ApplicationDBContext context, IValidator<Employee> validator)
         {
             _context = context;
+            _validator = validator;
         }
 
-        // GET: api/Employees
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
@@ -33,7 +29,6 @@ namespace Angular_CRUD_API.Controllers
             return await _context.Employees.ToListAsync();
         }
 
-        // GET: api/Employees/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)
         {
@@ -51,16 +46,15 @@ namespace Angular_CRUD_API.Controllers
             return employee;
         }
 
-        // PUT: api/Employees/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, Employee employee)
         {
-            if (id != employee.id)
+            var validation = await _validator.ValidateAsync(employee);
+            
+            if (id != employee.id || !validation.IsValid)
             {
-                return BadRequest();
+                return BadRequest(id != employee.id ? "Record Does not Exist." : validation.Errors);
             }
-
             _context.Entry(employee).State = EntityState.Modified;
 
             try
@@ -82,22 +76,27 @@ namespace Angular_CRUD_API.Controllers
             return Ok(res); 
         }
 
-        // POST: api/Employees
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
-          if (_context.Employees == null)
-          {
-              return Problem("Entity set 'ApplicationDBContext.Employees'  is null.");
-          }
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+            var validation = await _validator.ValidateAsync(employee);
+            if (validation.IsValid)
+            {
+                if (_context.Employees == null)
+                {
+                    return Problem("Entity set 'ApplicationDBContext.Employees'  is null.");
+                }
+                _context.Employees.Add(employee);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployee", new { id = employee.id }, employee);
+                return CreatedAtAction("GetEmployee", new { id = employee.id }, employee);
+            }
+            else
+            {
+                return BadRequest(validation.Errors);
+            }
         }
 
-        // DELETE: api/Employees/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {

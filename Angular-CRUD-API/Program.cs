@@ -1,4 +1,7 @@
 using Angular_CRUD_API.Data;
+using Angular_CRUD_API.Model;
+using Angular_CRUD_API.Validation;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IValidator<Employee>, EmployeeValidation>();
 
 var app = builder.Build();
 
